@@ -1,0 +1,23 @@
+#INSTALAR
+cryptopgraphy
+lxml
+bs4
+qrcode[PIL]
+pyzbar
+esteganew
+qrcode
+argparse
+logging
+shutil
+re
+mymetipes
+
+#POR DEFECTO
+sys
+os
+time
+requests
+json
+lxml
+smtplib
+ssl

@@ -1,0 +1,12 @@
+##POR DEFECTO##
+os
+json
+shuti
+argparse
+sys
+requests
+time
+##EXTERNAS##
+qrcode
+qrcode[PIL]
+pyzbar

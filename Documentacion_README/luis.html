@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luis &#8212; SphinxTest  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Mail" href="mail.html" />
+    <link rel="prev" title="Actualizador" href="actualizador.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="luis">
+<h1>Luis<a class="headerlink" href="#luis" title="Permalink to this heading">¶</a></h1>
+<p>Este script va a ligando a un script anterior llamado mail,el cual saca varios correos de una pagina, este script lo que hace es que va a empezar a leer
+linea por linea todos los correos que previamente se guardaron en un documento y empezara a enviarles un correo eectronico.
+Para que este script funcione ocupamos:</p>
+<p># Importamos librerías (logging, smtplib, ssl, mimetypes)
+# Importamos los módulos necesarios (MIMEMultipart)
+# Creamos objeto Multipart, quien será el recipiente que enviaremos (Todos los correos en el archivo)
+# Autenticamos (Entramos a nuestro correo)
+# Enviamos
+# Cerramos conexión</p>
+<div class="section" id="codigo-luis">
+<h2>Codigo Luis<a class="headerlink" href="#codigo-luis" title="Permalink to this heading">¶</a></h2>
+<p># Importamos librerías
+import logging
+import smtplib, ssl
+import mimetypes</p>
+<p># Importamos los módulos necesarios
+from email.mime.multipart import MIMEMultipart</p>
+<dl>
+<dt>def main():</dt><dd><p># Creamos objeto Multipart, quien será el recipiente que enviaremos
+with open(“archivo.txt”) as archivo:</p>
+<blockquote>
+<div><p>for linea in archivo:</p>
+<blockquote>
+<div><p>msg = MIMEMultipart()
+msg[‘From’]=”<a class="reference external" href="mailto:prograp3&#37;&#52;&#48;gmail&#46;com">prograp3<span>&#64;</span>gmail<span>&#46;</span>com</a>”
+msg[‘To’]=linea</p>
+</div></blockquote>
+</div></blockquote>
+</dd>
+<dt># Autenticamos</dt><dd><p>mailServer = smtplib.SMTP(‘smtp.gmail.com’,587)
+mailServer.ehlo()
+mailServer.starttls()
+mailServer.ehlo()
+mailServer.login(“<a class="reference external" href="mailto:prograp3&#37;&#52;&#48;gmail&#46;com">prograp3<span>&#64;</span>gmail<span>&#46;</span>com</a>”,”jqbpudussigbzjsy”)</p>
+</dd>
+<dt># Enviamos</dt><dd><p>mailServer.sendmail(“<a class="reference external" href="mailto:prograp3&#37;&#52;&#48;gmail&#46;com">prograp3<span>&#64;</span>gmail<span>&#46;</span>com</a>”,linea, msg.as_string())</p>
+</dd>
+<dt># Cerramos conexión</dt><dd><p>mailServer.close()</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SphinxTest</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p.html">Script General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qr.html">QR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="encrip_im.html">Encrip im</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actualizador.html">Actualizador</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actualizador.html#codigo-programador">Codigo Programador</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Luis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#codigo-luis">Codigo Luis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mail.html">Mail</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="actualizador.html" title="previous chapter">Actualizador</a></li>
+      <li>Next: <a href="mail.html" title="next chapter">Mail</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, JLores.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/luis.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

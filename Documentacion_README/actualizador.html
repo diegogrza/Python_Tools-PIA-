@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Actualizador &#8212; SphinxTest  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Luis" href="luis.html" />
+    <link rel="prev" title="Encrip im" href="encrip_im.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="actualizador">
+<h1>Actualizador<a class="headerlink" href="#actualizador" title="Permalink to this heading">¶</a></h1>
+<p>Se encarga de programar actualizacioness de windows. Se neceista descargar el modulo PSWindowsUpdate en powershell.
+Instalacion
+install-module pswindowsudate
+A continuacion darle si a todo lo que pide.</p>
+<div class="section" id="progt">
+<h2>ProgT<a class="headerlink" href="#progt" title="Permalink to this heading">¶</a></h2>
+<p>El script ProgT.py, se encarga de ejecutar el programa Programador.py desde la aplicacion de python.</p>
+<div class="section" id="codigo-progt">
+<h3>Codigo ProgT<a class="headerlink" href="#codigo-progt" title="Permalink to this heading">¶</a></h3>
+<p>#! python3</p>
+<p>###
+import subprocess, sys
+import logging
+###</p>
+<dl>
+<dt>def main():</dt><dd><p>#—————Logging—————#
+logging.basicConfig(filename=’app.log’, level =’DEBUG’)
+#—————Registro de diagnóstico—————#
+logging.error(“No se encontró un archivo con ese nombre”)</p>
+<p>#—————SCRIPT—————#
+h = subprocess.Popen(“powershell.exe -ExecutionPolicy RemoteSigned -file  Programador.ps1”, stdout=sys.stdout)
+h.communicate()</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="programador">
+<h2>Programador<a class="headerlink" href="#programador" title="Permalink to this heading">¶</a></h2>
+<p>El script Programador.ps1 se encargara de programar la tarea, ingresando la particion de la aplicacion de python, ejecutando el actualizador.py,
+despues el codigo utilizara las configuraciones correpsondientes con los parametros y condiciones que se le añadieron, para que al ser ejecutada
+se registre en el programador de tareas.</p>
+<div class="section" id="codigo-programador">
+<h3>Codigo Programador<a class="headerlink" href="#codigo-programador" title="Permalink to this heading">¶</a></h3>
+<p>#$P es igual a la particion donde se ubica la aplicacion de python
+$P = (get-command python.exe).Path
+#$A, con -Execute se especifica la aplicacion con la que se ejecutara el programa, -Argument es el programa que se va ejecutar, -workingDirectory es el directorio donde se encuentra el programa</p>
+<p>$A = New-ScheduledTaskAction -Execute $P -Argument “C:UsersJorge LoresDesktopFInPIAFrancoactualizador.py” -workingDirectory “C:UsersJorge LoresDesktopFInPIAFranco”
+#$T Se aplican desencadenadores, el cual se ejecutara diariamente con -Daily y sera a las 8:00 pm con -At
+$T = New-ScheduledTaskTrigger -Daily -At “8pm”
+#$S Se aplican los ajustes que tendra la tarea, en donde por un intervalo de cada 10 minutos y 12 reinicios, la tarea se ejcutara, al mismo tiempo se crea un cronometro donde el limite son 5 horas
+$S = New-ScheduledTaskSettingsSet -RestartInterval(New-TimeSpan -Minutes 10) -ExecutionTimeLimit(New-TimeSpan -Hours 5) -RestartCount 12
+#Se ejecuta el registro de la tarea en el programador de tareas preservando los parametros configurados en las variables
+Register-ScheduledTask Actualizador -RunLevel Highest -Trigger $T -Action $A -Settings $S</p>
+</div>
+</div>
+<div class="section" id="pr">
+<h2>Pr<a class="headerlink" href="#pr" title="Permalink to this heading">¶</a></h2>
+<p>El script Pr.ps1 se encarga de crear una segunda condicion, proveniente de la segunda opcion del condicional de actualizador.py, donde al no
+cumplirse el dia seleccionado detendra la funcion de actualizacion con el fin de disminuir procesos e interrupciones.</p>
+<div class="section" id="codigo-pr">
+<h3>Codigo Pr<a class="headerlink" href="#codigo-pr" title="Permalink to this heading">¶</a></h3>
+<p>$g = Get-Service -Name “wuauserv”
+if ($g.status -eq “Running”) {
+Stop-service -name “wuauserv”
+}</p>
+</div>
+</div>
+<div class="section" id="instalador">
+<h2>Instalador<a class="headerlink" href="#instalador" title="Permalink to this heading">¶</a></h2>
+<p>El script Instalador.ps1 se encarga de crear condiciones escritas en powershell para las situaciones en caso de que al momento de ejecutar
+el actualizador, la instalacion de las actualizaciones se lleven a cabo en segundo plano solo si se cumple la condicion del dia y la hora.</p>
+<div class="section" id="codigo-instalador">
+<h3>Codigo Instalador<a class="headerlink" href="#codigo-instalador" title="Permalink to this heading">¶</a></h3>
+<p>$F = Get-Service -Name “wuauserv”
+if ($F.status -eq “Running”) {
+Install-Windowsupdate -AcceptAll
+} else {
+Start-service -name “wuauserv”
+Install-windowsupdate -AcceptAll
+}</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Actualizador<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>El actualizador.py se encarga de tener el control de los dias en los que se desean ejecutar los programas cargados y escritos en powershell,
+se importa el modulo datetime que ayudara en el registro del tiempo actual, asi como tambien se usa subprocess para llevar a cabo ejecuciones
+de programas escritos con powershell. Usando un condicional, es como haremos que el programa solo se ejecute en el dia seleccionado.</p>
+<div class="section" id="id2">
+<h3>Codigo Instalador<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>#! python3</p>
+<p>##
+from datetime import datetime
+import subprocess, sys
+import argparse
+##</p>
+<p>##Script##
+Dia = datetime.today().strftime(‘%A’) #Esta linea especifica el nombre del dia actual
+Lunes = ‘Monday’
+Martes = ‘Tuesday’
+Miercoles = ‘Wednesday’
+Jueves = ‘Thursday’
+Viernes = ‘Friday’
+Sabado = ‘Saturday’
+Domingo = ‘Sunday’</p>
+<dl class="simple">
+<dt>#Dia es igual al dia escrito , por lo que el dia escrito es el primer condicional con el que se especifica el dia o los dias a instalar las actualizaciones</dt><dd><dl class="simple">
+<dt>if Dia == Viernes:</dt><dd><p>p = subprocess.Popen(“‘powershell.exe -ExecutionPolicy RemoteSigned -file ‘Instalador.ps1’” , stdout=sys.stdout)
+p.communicate()</p>
+</dd>
+<dt>else:</dt><dd><p>f = subprocess.Popen(“powershell.exe -ExecutionPolicy RemoteSigned -file ‘Pr.ps1’”, stdout=sys.stdout)
+f.communicate()</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SphinxTest</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p.html">Script General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qr.html">QR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="encrip_im.html">Encrip im</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Actualizador</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#progt">ProgT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#codigo-progt">Codigo ProgT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#programador">Programador</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#codigo-programador">Codigo Programador</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pr">Pr</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#codigo-pr">Codigo Pr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#instalador">Instalador</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#codigo-instalador">Codigo Instalador</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Actualizador</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Codigo Instalador</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="luis.html">Luis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mail.html">Mail</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="encrip_im.html" title="previous chapter">Encrip im</a></li>
+      <li>Next: <a href="luis.html" title="next chapter">Luis</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, JLores.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/actualizador.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

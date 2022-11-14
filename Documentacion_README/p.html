@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Script General &#8212; SphinxTest  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QR" href="qr.html" />
+    <link rel="prev" title="Bienvenido a la documentacion de SphinxTest’s!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="script-general">
+<h1>Script General<a class="headerlink" href="#script-general" title="Permalink to this heading">¶</a></h1>
+<p>Con el parametro tool al escribir las palabras actualizador, qr, encrip im, mail y luis se pueden mandar a llamar las herramientas las distintass herramientas contenidas en este proyecto.</p>
+<p>Al poner -tool ‘encrip im’ podremos ya sea ingresar un mensaje en una imagen y generar una imagen con el mensaje cifrado.
+Con -tool ‘qr’ podemos ya sea generar qrs o leer qrs sin ingresar a la liga y analizar si son maliciosos o no.
+Con -tool ‘actualizador’ podremos programar actualizaciones de nuestro sistema windows.
+Con -tool ‘luis’
+Por ultimo con -tool ‘mail’</p>
+<div class="section" id="mandamos-a-llamar-las-demas-herramientas">
+<h2>MANDAMOS A LLAMAR LAS DEMAS HERRAMIENTAS<a class="headerlink" href="#mandamos-a-llamar-las-demas-herramientas" title="Permalink to this heading">¶</a></h2>
+<p>#! python3</p>
+<p>##
+from QR import qr
+from Franco import ProgT
+from Luis import luis
+from wsteganew import encrip_im
+import sys
+import argparse
+##</p>
+<p>###——————Argumentos——————###
+parser = argparse.ArgumentParser()
+parser.add_argument(“-tool”, dest=”nombre”, help=”Mencionar el nombre del script”)</p>
+<p>###——————Argumentos wsteganew——————### ##Se ocupan los parámetros del script a llamar para que los reconozca
+parser.add_argument(“-encriptar”, dest=”im1”, help=”Imagen a codificar”)
+parser.add_argument(“-msg”, dest=”msgc”, help=”Mensaje a cifrar”)
+parser.add_argument(“-desencriptar”, dest=”im2”, help=”Imagen a decodificar”)
+parser.add_argument(“-key”, dest=”ke1”, help=”Llave para descifrar”)
+parser.add_argument(“-nf”, dest=”ffiles”, help=”Nombre de la img resultante”)
+parser.add_argument(“-nd”, dest=”dfiles”, help=”Nombre del texto descifrado”)</p>
+<p>###——————Argumentos QR——————###
+parser.add_argument(“-encode”, dest=”txt”, help=”Ingrese la ruta del txt con las urls”)
+parser.add_argument(“-decode”, dest=”imgs”, help=”Ingrese la ruta de las imagenes”)</p>
+<p>args = parser.parse_args()</p>
+<p>## Scripts ##
+if  sys.argv[1] == “-tool”:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>if sys.argv[2] == “encrip im”:</dt><dd><p>encrip_im.main()</p>
+</dd>
+<dt>if sys.argv[2] == “actualizador”:</dt><dd><p>ProgT.main()</p>
+</dd>
+<dt>if sys.argv[2] == “mail”:</dt><dd><p>mail.main()</p>
+</dd>
+<dt>if sys.argv[2] == “luis”:</dt><dd><p>luis.main</p>
+</dd>
+<dt>if sys.argv[2] == “qr”:</dt><dd><p>qr.main()</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SphinxTest</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Script General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mandamos-a-llamar-las-demas-herramientas">MANDAMOS A LLAMAR LAS DEMAS HERRAMIENTAS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qr.html">QR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="encrip_im.html">Encrip im</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actualizador.html">Actualizador</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luis.html">Luis</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Bienvenido a la documentacion de SphinxTest’s!</a></li>
+      <li>Next: <a href="qr.html" title="next chapter">QR</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, JLores.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/p.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

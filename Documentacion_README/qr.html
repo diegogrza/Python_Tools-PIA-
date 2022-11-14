@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR &#8212; SphinxTest  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Encrip im" href="encrip_im.html" />
+    <link rel="prev" title="Script General" href="p.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="qr">
+<h1>QR<a class="headerlink" href="#qr" title="Permalink to this heading">¶</a></h1>
+<p>Al usar el parámetro “-encode” se espera que se escriba una ruta de un archivo &gt;
+Ejemplo de uso:
+pia.py -tool “qr” -encode “ruta del archivo txt”
+Al usar el parámetro “-decode” se espera que se escriba la ruta de un archivo t&gt;
+Se generará un archivo wrlgen.txt en la carpeta URLS con las urls de cada image&gt;
+Ejemplo de uso:
+pia.py -tool “qr” -decode “.URLSnqr.txt”</p>
+<div class="section" id="codigo-qr">
+<h2>Codigo QR<a class="headerlink" href="#codigo-qr" title="Permalink to this heading">¶</a></h2>
+<p>#! python3</p>
+<p>##
+import os
+import argparse
+import sys
+import qrcode
+import requests
+import time
+import json
+import shutil
+import qrcode
+from pyzbar import pyzbar
+from PIL import Image
+import logging
+##</p>
+<p>#—————##RUTAS##—————#
+def rutas():</p>
+<blockquote>
+<div><p>dir = os.path.dirname(__file__)
+global dap
+dirap = os.path.join(dir,”APIKEY”) ##Es la carpeta que contendrá la apikey para poder usar virustotal
+dap = dirap+”Akey.txt” ##Así se debe de llamar el txt con la apikey, se puede cambiar si se requiere
+global apikey
+w = open(dap,”r”)
+for p in w:</p>
+<blockquote>
+<div><p>apikey=p</p>
+</div></blockquote>
+<p>global dim
+dim = os.path.join(dir,”QRs”) ##Es la carpeta en la que se generaran los QRs que se requieran
+global durl
+durl = os.path.join(dir,”URLS”) ##La carpeta en la que estarán los txts con la ruta de los qrs a analizar y también de los links que se quieran hacer qr
+durl = durl+”wrlgen.txt” ##El txt con los links que se van a analizar
+global dre1
+global dre2
+dres = os.path.join(dir,”RESULTS”)
+dre1 = dres+’Sin resultados.txt’
+dre2 = dres+’wrls limpias.txt’
+dre3 = dres+’wrls maliciosas.txt’</p>
+</div></blockquote>
+<p>rutas()</p>
+<dl>
+<dt>def main():</dt><dd><p>#—————# ARGUMENTOS #—————#
+parser = argparse.ArgumentParser()
+parser.add_argument(“-encode”, dest=”txt”, help=”Ingrese la ruta del txt con las urls”)
+parser.add_argument(“-decode”, dest=”imgs”, help=”Ingrese la ruta de las imagenes”)
+parser.add_argument(“-tool”, dest=”nombre”, help=”Mencionar el nombre del script”)
+args = parser.parse_args()
+#try:
+#       if sys.argv[3] == “”:
+#               pass
+#except:
+#       print(“n[+] Ejecucion:  py qr_jorge.py -h”)</p>
+<p>#—————Logging—————#
+logging.basicConfig(filename=’app.log’, level =’DEBUG’)
+#—————Registro de diagnóstico—————#
+logging.debug(“En la ruta ya se encuentra una imagen con el mismo nombre”)
+logging.error(“No se encontró un archivo con ese nombre en la ruta especificada”)</p>
+<p>#—————GENERAR QR—————#
+if sys.argv[3] == “-encode”:</p>
+<blockquote>
+<div><p>u = args.txt
+print(u)
+f = open(u,”r”)
+i=1
+for x in f:</p>
+<blockquote>
+<div><p>print(“url: ” + x)
+qr = qrcode.QRCode(5,error_correction=qrcode.constants.ERROR_CORRECT_L)
+url = x
+qr.add_data(url)
+qr.make()
+im = qr.make_image()
+i1 = str(i)
+name = “qr” + i1 + “.jpg”
+print(name)
+im.save(name)
+shutil.move(name, dim)
+i+=1</p>
+</div></blockquote>
+<p>f.close</p>
+</div></blockquote>
+<p>##—————##EXTRAER LINK DE QRS Y ANALIZAR##—————##
+elif sys.argv[3] == “-decode”:</p>
+<blockquote>
+<div><p>pa = args.imgs
+a = open(pa,”r”)
+arc = open(durl, “w”)
+for s in a:</p>
+<blockquote>
+<div><p>print(“nombre de qr: ” + s)
+s = s.rstrip()
+image = Image.open(s)
+qr_code = pyzbar.decode(image)[0]
+data= qr_code.data.decode(‘utf8’).encode(‘shift-jis’).decode(‘utf-8’)
+print(“El mensaje es: “,data)
+arc.write(data)</p>
+</div></blockquote>
+<p>arc.close()
+a.close()
+#FIN EXTRAER LINK QR</p>
+<p>#HACER EL REPORTE
+url = ‘<a class="reference external" href="https://www.virustotal.com/vtapi/v2/url/report">https://www.virustotal.com/vtapi/v2/url/report</a>’
+ars = open(durl,”r”)
+parameters = {‘apikey’: apikey, ‘resource’: ars}</p>
+<dl>
+<dt>for i in ars:</dt><dd><p>parameters = {‘apikey’: apikey, ‘resource’: i}
+response= requests.get(url=url, params=parameters)
+json_response= json.loads(response.text)</p>
+<dl class="simple">
+<dt>if json_response[‘response_code’] &lt;= 0:</dt><dd><dl class="simple">
+<dt>with open(dre1, ‘a’)  as notfound:</dt><dd><p>notfound.write(i) and notfound.write(“tNo se encontró la URLn”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>elif json_response[‘response_code’] &gt;= 1:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>if json_response[‘positives’] &lt;= 0:</dt><dd><dl class="simple">
+<dt>with open(dre2, ‘a’)  as clean:</dt><dd><p>clean.write(i) and clean.write(“t No es malicioso n”)</p>
+</dd>
+</dl>
+</dd>
+<dt>else:</dt><dd><dl class="simple">
+<dt>with open(dre3, ‘a’)  as malicious:</dt><dd><p>malicious.write(i) and malicious.write(“t Malicious”) and malicious.write(“t Este dominio detectó   “+ str(json_response[‘positives’]) + ”  pruebas fallidasn”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>time.sleep(1)</p>
+</dd>
+</dl>
+<p>ars.close()</p>
+</div></blockquote>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SphinxTest</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p.html">Script General</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">QR</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#codigo-qr">Codigo QR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="encrip_im.html">Encrip im</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actualizador.html">Actualizador</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actualizador.html#codigo-programador">Codigo Programador</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luis.html">Luis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mail.html">Mail</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="p.html" title="previous chapter">Script General</a></li>
+      <li>Next: <a href="encrip_im.html" title="next chapter">Encrip im</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, JLores.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/qr.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
